@@ -84,10 +84,14 @@ public static void addCourseEnrollment(int studentId, int courseId) throws SQLEx
 
       // Delete enrollment record
 
-      String deletedEnrollment = "DELETE FROM Enrollments WHERE enrollment_id=?";
+      String deletedEnrollment = "DELETE FROM Enrollments WHERE enrollment_id=? AND course_id = ?";
       deleteEnrollmentStatement = connection.prepareStatement(deletedEnrollment);
       deleteEnrollmentStatement.setInt(1,enrollmentId);
-      deleteEnrollmentStatement.executeUpdate();
+      deleteEnrollmentStatement.setInt(2,courseId);
+      rowsUpdated =  deleteEnrollmentStatement.executeUpdate();
+      if(rowsUpdated == 0){
+        throw new SQLException("Something went wrong!!");
+      }
 
       // Commit transaction
       connection.commit();
